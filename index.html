@@ -1,0 +1,88 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><meta name='theme-color' content='#0f3d75'><link rel='manifest' href='manifest.webmanifest'><link rel='icon' href='icon-192.png'><link rel='apple-touch-icon' href='apple-touch-icon.png'><title>Prague : tchèque et visite</title>
+<style>
+:root{--bg:#f6f8fb;--fg:#101828;--card:#fff;--ac:#d7141a;--bl:#0f3d75;--mut:#5b6678;--ok:#1f8a4c;--bd:#dde3ec}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1622;--fg:#eef2f8;--card:#15233a;--bl:#7fb2ee;--mut:#9aa8bd;--bd:#27395a}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+main{max-width:640px;margin:auto;padding:16px 16px 40px}
+h1,h3{font-family:Georgia,serif;margin:0}h1{font-size:28px;line-height:1.15}h3{font-size:19px}
+a{color:inherit;text-decoration:none}button{font:inherit;color:var(--fg);cursor:pointer}
+.back{display:inline-block;padding:8px 0;color:var(--bl);font-weight:600}
+.hero{display:flex;gap:14px;align-items:center;margin:8px 0 18px}.hero img{width:84px;height:84px;border-radius:20px}.hero p{margin:4px 0 0;color:var(--mut)}
+.grp{margin:20px 0 6px;font-weight:600;color:var(--mut);font-size:14px}
+.row{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid var(--bd)}.row:first-of-type{border-top:1px solid var(--bd)}
+.row b{display:block;font-size:17px}.row span.d{color:var(--mut);font-size:14px}.ic{font-size:26px;width:36px;text-align:center}.row>div{flex:1}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.w{display:flex;align-items:center;gap:10px}.w>div{flex:1}.cz{font-weight:600;font-size:18px}.ph,.fr{color:var(--mut);font-size:14px}
+.play{width:44px;height:44px;border-radius:50%;border:0;background:var(--ac);color:#fff;font-size:18px;flex:none}
+h2{font-size:14px;color:var(--mut);margin:18px 0 8px;font-weight:600}
+.btn{padding:12px;border:1px solid var(--bd);background:var(--card);border-radius:10px}.opt{display:block;width:100%;text-align:left;margin-bottom:8px}.pri{background:var(--bl);color:#fff;border-color:var(--bl)}
+.ok{background:var(--ok)!important;color:#fff!important}.ko{background:var(--ac)!important;color:#fff!important}.big{font-size:26px;font-weight:700;text-align:center;margin:8px 0}
+.tl{border-left:3px solid var(--bl);margin-left:6px;padding-left:16px}.tl .it{margin-bottom:22px;position:relative}.tl .it:before{content:'';position:absolute;left:-24px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--ac)}
+.date{font-weight:700;color:var(--ac)}.where{color:var(--bl);font-size:14px;margin-top:4px}
+.tip{border-left:3px solid var(--ac);padding-left:10px;margin-top:8px;font-size:15px}
+</style></head><body><main><div id='app'></div></main>
+<script>
+const W=[[`Politesse`,`Dobrý den`,`bonjour`,`DO-bri dèn`],[`Politesse`,`Dobrý večer`,`bonsoir`,`DO-bri VÈ-tchèr`],[`Politesse`,`Ahoj`,`salut (informel)`,`A-hoï`],[`Politesse`,`Na shledanou`,`au revoir`,`na SKHLÈ-da-no-ou`],[`Politesse`,`Děkuji`,`merci`,`DYÈ-kou-yi`],[`Politesse`,`Prosím`,`s'il vous plaît / de rien`,`PRO-sim`],[`Politesse`,`Promiňte`,`excusez-moi`,`PRO-min-yté`],[`Politesse`,`Ano`,`oui`,`A-no`],[`Politesse`,`Ne`,`non`,`nè`],[`Se débrouiller`,`Mluvíte anglicky?`,`parlez-vous anglais ?`,`MLOU-vi-té AN-glits-ki`],[`Se débrouiller`,`Nerozumím`,`je ne comprends pas`,`NÈ-ro-zou-mim`],[`Se débrouiller`,`Kde je…?`,`où est… ?`,`gdè yè`],[`Se débrouiller`,`Kolik to stojí?`,`combien ça coûte ?`,`KO-lik to STO-yi`],[`Se débrouiller`,`Toalety`,`toilettes`,`TO-a-lè-ti`],[`Se débrouiller`,`Pomoc!`,`à l'aide !`,`PO-monts`],[`Restaurant`,`Jedno pivo, prosím`,`une bière, s'il vous plaît`,`YÈD-no PI-vo PRO-sim`],[`Restaurant`,`Účet, prosím`,`l'addition, s'il vous plaît`,`OU-tchèt PRO-sim`],[`Restaurant`,`Dobrou chuť`,`bon appétit`,`DO-brô khoutch`],[`Restaurant`,`Na zdraví!`,`santé !`,`na ZDRA-vi`],[`Restaurant`,`Voda`,`eau`,`VO-da`],[`Restaurant`,`Káva`,`café`,`KA-va`],[`Transports`,`Jízdenka`,`billet`,`YIZ-dèn-ka`],[`Transports`,`Zastávka`,`arrêt`,`ZA-stav-ka`],[`Transports`,`Metro`,`métro`,`MÈ-tro`]];
+const T=[[`Accent tonique`,`Toujours sur la première syllabe : PRA-ha, DYÈ-ku-yi.`,`Praha`],[`č, š, ž`,`č = tch, š = ch, ž = j (comme dans « jour »).`,`čaj`],[`c et j`,`c = ts ; j = y (comme dans « yaourt »).`,`cesta`],[`ch`,`Un h expiré, comme la jota espagnole.`,`chleba`],[`ě`,`Adoucit la consonne avant : dě = dyé, ně = nyé.`,`děkuji`],[`ř`,`Son unique : un r roulé + j. Essayez sans stress, personne ne vous en voudra.`,`Dvořák`],[`Voyelles longues`,`Les accents (á é í ó ú ů) allongent la voyelle. ů = ou long.`,`dům`]];
+const H=[[`Vers 870`,`Les origines`,`Le prince Bořivoj fonde le château sur la colline de Hradčany. Les Přemyslides y règnent et Prague devient le cœur du royaume de Bohême.`,`Château de Prague`],
+[`XIVe siècle`,`Charles IV, capitale d'Europe`,`Roi de Bohême puis empereur, Charles IV fait de Prague une grande capitale : université (1348), pont Charles (1357), cathédrale Saint-Guy, Nové Město.`,`Pont Charles, cathédrale Saint-Guy`],
+[`1415-1434`,`Jan Hus et les guerres hussites`,`Le prédicateur Jan Hus est brûlé à Constance en 1415. Sa mort déclenche les guerres hussites, qui marquent durablement l'identité tchèque.`,`Chapelle de Bethléem, place de la Vieille-Ville`],
+[`1419 et 1618`,`Les défenestrations de Prague`,`En 1618, deux gouverneurs impériaux sont jetés par une fenêtre du château : c'est l'étincelle de la guerre de Trente Ans. Un épisode similaire avait eu lieu en 1419.`,`Palais royal du château`],
+[`Vers 1600`,`Rodolphe II et ses savants`,`L'empereur installe sa cour à Prague. Astronomes et alchimistes, dont Tycho Brahe et Kepler, y travaillent. La Ruelle d'Or garde, selon la légende, le souvenir des alchimistes.`,`Château, Ruelle d'Or`],
+[`XIXe siècle`,`Le renouveau national`,`Sous les Habsbourg, la langue et la culture tchèques renaissent : Smetana en musique, Mucha en art, et le Théâtre national financé par souscription populaire.`,`Théâtre national, Obecní dům`],
+[`1918-1945`,`La première République`,`Le 28 octobre 1918, la Tchécoslovaquie naît avec Masaryk pour premier président. En mars 1939, l'Allemagne nazie occupe le pays.`,`Château (siège présidentiel)`],
+[`1948-1989`,`Du communisme à la Révolution de velours`,`Les communistes prennent le pouvoir en 1948. Le Printemps de Prague de 1968 est écrasé par l'invasion du Pacte de Varsovie. En novembre 1989, des manifestations pacifiques font tomber le régime.`,`Place Venceslas, Národní třída`]];
+const P=[[`Château de Prague`,`Pražský hrad`,`Un immense ensemble de cours et de palais, avec la cathédrale Saint-Guy. Comptez une demi-journée.`,`Arrivez à l'ouverture pour éviter la foule.`],
+[`Pont Charles`,`Karlův most`,`Le pont gothique du XIVe siècle, bordé de statues, relie la Vieille-Ville à Malá Strana.`,`Tôt le matin ou au coucher du soleil, il est bien plus calme.`],
+[`Horloge astronomique`,`Staroměstský orloj`,`Installée en 1410 sur l'hôtel de ville de la Vieille-Ville. Les figurines défilent à chaque heure pleine.`,`Montez à la tour pour la vue sur la place.`],
+[`Quartier juif`,`Josefov`,`Synagogues, ancien cimetière et musée racontent plus de mille ans de présence juive à Prague.`,`Vérifiez les jours de fermeture (souvent le samedi) avant de venir.`],
+[`Vyšehrad`,`Vyšehrad`,`Une forteresse sur un rocher au-dessus de la Vltava. Le cimetière abrite les tombes de Dvořák et de Smetana.`,`Idéal pour une balade calme avec vue sur la ville.`],
+[`Colline de Petřín`,`Petřín`,`Parcs, roseraie et petite tour inspirée de la tour Eiffel, accessibles en funiculaire.`,`Montez en funiculaire, redescendez à pied.`]];
+const G=[[`Svíčková`,`Bœuf, sauce crémeuse`,`Bœuf mariné avec une sauce douce aux légumes racines et à la crème, servi avec des knedlíky (tranches de pain vapeur) et des airelles. Un classique des repas de famille.`],
+[`Guláš`,`Ragoût au paprika`,`Ragoût de bœuf épicé au paprika, accompagné de knedlíky ou de pain.`],
+[`Vepřo knedlo zelo`,`Porc, knedlíky, chou`,`Porc rôti, knedlíky et chou : le plat tchèque par excellence, dont le nom énumère les trois ingrédients.`],
+[`Smažený sýr`,`Fromage pané`,`Tranche de fromage pané et frit, servie avec frites et sauce tartare. Le plan sans viande, simple et populaire.`],
+[`Bramboráky`,`Galettes de pommes de terre`,`Galettes croustillantes à l'ail et à la marjolaine, en plat ou en en-cas.`],
+[`Pivo`,`Bière`,`Le pays est l'un des plus gros buveurs de bière par habitant. Cherche Pilsner Urquell, Budvar ou Staropramen, et préfère une hospoda (brasserie) de quartier à un bar à touristes.`],
+[`Trdelník`,`Pâtisserie en spirale`,`Pâte grillée sur broche, sucrée à la cannelle. Très vendue aux touristes, mais pas une vraie tradition de Prague : à goûter par curiosité.`],
+[`Kofola`,`Soda local`,`Le soda tchèque, un cola aux herbes que l'on trouve partout.`],
+[`Becherovka`,`Liqueur d'herbes`,`Liqueur d'herbes originaire de Karlovy Vary, souvent servie en digestif.`]];
+const I=[[`Monnaie`,`La Tchéquie utilise la couronne tchèque (CZK, Kč), pas l'euro. Quand un terminal de paiement propose de convertir en euros, choisis de payer en couronnes : le taux est en général meilleur.`],
+[`Payer et retirer`,`La carte sans contact est acceptée presque partout. Pour du liquide, retire dans un distributeur de banque et évite les bureaux de change de rue aux taux affichés trompeurs.`],
+[`Pourboire`,`Au restaurant, on laisse environ 10 % si le service est bon, souvent en arrondissant l'addition. Vérifie d'abord que le service n'est pas déjà inclus.`],
+[`Transports`,`Métro, tram et bus se partagent les mêmes billets, achetés au distributeur ou sur l'appli officielle. Pense à valider ton billet avant de monter (ou dans le métro), sinon tu risques une amende. Vérifie les tarifs et durées sur le site du réseau.`],
+[`Depuis l'aéroport`,`L'aéroport est relié à la ville par des bus qui rejoignent la ligne A du métro ou la gare centrale. Le détail des lignes et des prix change : regarde le site de l'aéroport avant de partir.`],
+[`Taxis`,`Évite les taxis hélés dans la rue, souvent plus chers. Réserve plutôt par une appli de VTC ou un service connu.`],
+[`Électricité`,`230 V avec les mêmes prises qu'en France : aucun adaptateur nécessaire.`],
+[`Papiers et santé`,`La Tchéquie fait partie de l'espace Schengen : une carte d'identité en cours de validité suffit pour un Français. Emporte ta carte européenne d'assurance maladie (CEAM). Numéro d'urgence : 112.`],
+[`Prudence`,`Attention aux pickpockets dans les lieux très fréquentés : pont Charles, place de la Vieille-Ville, trams et métro aux heures de pointe.`],
+[`Bon à savoir`,`L'eau du robinet est potable. Certains musées sont fermés un jour par semaine, souvent le lundi : vérifie avant de te déplacer.`]];
+const $=s=>document.querySelector(s),app=$('#app'),sp='speechSynthesis' in window;let Q=null,V=null;
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+function voice(){if(!sp)return;V=speechSynthesis.getVoices().find(v=>v.lang.replace('_','-').toLowerCase().startsWith('cs'))||null;const e=$('#v');if(e)e.textContent=V?'':'Aucune voix tchèque détectée : installe-la dans Réglages > Synthèse vocale pour un meilleur rendu.'}
+if(sp)speechSynthesis.onvoiceschanged=voice;
+function say(t){if(!sp)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='cs-CZ';if(V)u.voice=V;u.rate=.8;speechSynthesis.speak(u)}
+const row=(h,i,t,d)=>`<a class='row' href='#/${h}'><span class='ic'>${i}</span><div><b>${t}</b><span class='d'>${d}</span></div></a>`;
+function home(){return `<div class='hero'><img src='icon-192.png' alt=''><div><h1>Prague</h1><p>Le tchèque du quotidien et les clés de la ville.</p></div></div><div class='grp'>Parler</div>`+row('mots','📖','Mots','24 mots et phrases avec audio')+row('prono','🔊','Prononciation','Les repères pour bien se faire comprendre')+row('quiz','🎯','Quiz',`Teste-toi, à l'oreille ou à l'écrit`)+`<div class='grp'>Visiter</div>`+row('histoire','🏰','Histoire','Huit étapes, de Bořivoj à 1989')+row('lieux','📍','Lieux','Six sites à ne pas manquer')+`<div class='grp'>Préparer</div>`+row('gastro','🍺','Gastronomie','Plats, bière et bons réflexes à table')+row('infos','ℹ️','Infos pratiques','Argent, transports, papiers, sécurité')}
+function mots(){let h='<h3>Mots</h3>',c='';W.forEach(([g,cz,fr,ph],i)=>{if(g!=c){c=g;h+=`<h2>${g}</h2>`}h+=`<div class='card w'><div><div class='cz'>${cz}</div><div class='ph'>${ph}</div><div class='fr'>${fr}</div></div><button class='play' data-s='${i}' aria-label='Écouter'>▶</button></div>`});return h}
+function prono(){return `<h3>Prononciation</h3>`+T.map(([a,b,s])=>`<div class='card w' style='margin-top:8px'><div><div class='cz'>${a}</div><div class='fr'>${b}</div></div><button class='play' data-say='${s}' aria-label='Écouter'>▶</button></div>`).join('')}
+function histoire(){return `<h3>Histoire en 8 étapes</h3><div class='tl' style='margin-top:18px'>`+H.map(([d,t,x,w])=>`<div class='it'><div class='date'>${d}</div><b>${t}</b><div>${x}</div><div class='where'>À voir : ${w}</div></div>`).join('')+`</div>`}
+function lieux(){return `<h3>Lieux à ne pas manquer</h3>`+P.map(([n,c,x,t])=>`<div class='card' style='margin-top:8px'><div class='w'><div><b>${n}</b><div class='ph'>${c}</div></div><button class='play' data-say='${c}' aria-label='Écouter'>▶</button></div><div>${x}</div><div class='tip'>${t}</div></div>`).join('')}
+function quiz(){if(!Q)return `<h3>Quiz</h3><h2>10 questions au choix</h2>`+[['cz','Tchèque → français'],['ear','Écoute → français'],['fr','Français → tchèque']].map(([m,t])=>`<button class='btn opt' data-m='${m}'>${t}</button>`).join('');
+if(Q.i>=Q.l.length)return `<div class='card'><div class='big'>${Q.s} / ${Q.l.length}</div><p style='text-align:center'>${Q.s>=8?'Super !':Q.s>=5?'Bien, encore un petit effort !':'Courage, retente !'}</p></div><button class='btn pri opt' data-m='${Q.m}'>Rejouer</button><button class='btn opt' data-m=''>Changer de quiz</button>`;
+const c=Q.l[Q.i];if(!Q.o)Q.o=sh([c,...sh(W.filter(x=>x!=c)).slice(0,3)]);const L=x=>Q.m=='fr'?x[1]:x[2];const p=Q.m=='cz'?c[1]:Q.m=='ear'?'Écoute…':c[2];
+return `<p class='ph'>Question ${Q.i+1}/${Q.l.length}</p><div class='card'><div class='big'>${p}</div>`+(Q.m!='fr'?`<div style='text-align:center'><button class='play' data-q='1' aria-label='Écouter'>▶</button></div>`:'')+`</div>`+Q.o.map((x,j)=>`<button class='btn opt${Q.a!=null?(x==c?' ok':j==Q.a?' ko':''):''}' data-a='${j}'>${L(x)}</button>`).join('')+(Q.a!=null?`<p class='ph'>${c[1]} · ${c[3]}</p><button class='btn pri opt' data-n='1'>Suivant</button>`:'')}
+function gastro(){return `<h3>Gastronomie</h3>`+G.map(([c,t,x])=>`<div class='card' style='margin-top:8px'><div class='w'><div><b>${c}</b><div class='ph'>${t}</div></div><button class='play' data-say='${c}' aria-label='Écouter'>▶</button></div><div>${x}</div></div>`).join('')+`<div class='card'><b>Bon plan</b><div class='tip'>Le menu du midi (polední menu) est souvent moins cher que la carte du soir. Demande l'addition avec « Účet, prosím ».</div></div>`}
+function infos(){return `<h3>Infos pratiques</h3>`+I.map(([t,x])=>`<div class='card' style='margin-top:8px'><b>${t}</b><div>${x}</div></div>`).join('')}
+const S={mots,prono,quiz,histoire,lieux,gastro,infos};
+function render(){const k=location.hash.replace('#/','');app.innerHTML=(S[k]?`<a class='back' href='#/'>← Accueil</a><p id='v' class='ph'></p>`+S[k]():home());voice();window.scrollTo(0,0)}
+addEventListener('hashchange',()=>{Q=null;if(sp)speechSynthesis.cancel();render()});
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+if(d.say)return say(d.say);if(d.s!=null)return say(W[d.s][1]);if(d.q)return say(Q.l[Q.i][1]);
+if(d.m!=null){Q=d.m?{m:d.m,l:sh(W).slice(0,10),i:0,s:0,a:null,o:null}:null;if(Q&&Q.m=='ear')say(Q.l[0][1])}
+else if(d.a!=null&&Q.a==null){Q.a=+d.a;if(Q.o[Q.a]==Q.l[Q.i])Q.s++}
+else if(d.n){Q.i++;Q.a=null;Q.o=null;if(Q.m=='ear'&&Q.l[Q.i])say(Q.l[Q.i][1])}
+else return;
+const y=scrollY;render();scrollTo(0,y)});
+render();if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
