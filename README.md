@@ -39,3 +39,5 @@ Après une modification, augmenter le numéro de version du cache dans `sw.js` (
 ## Contenu à vérifier avant le départ
 
 Horaires, jours de fermeture, tarifs et lignes de transport changent : les confirmer sur les sites officiels.
+
+ 
