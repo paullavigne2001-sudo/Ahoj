@@ -8,7 +8,7 @@ h1,h3{font-family:Georgia,serif;margin:0}h1{font-size:28px;line-height:1.15}h3{f
 a{color:inherit;text-decoration:none}button{font:inherit;color:var(--fg);cursor:pointer}
 .back{display:inline-block;padding:8px 0;color:var(--bl);font-weight:600}
 .hero{display:flex;gap:14px;align-items:center;margin:8px 0 18px}.hero img{width:84px;height:84px;border-radius:20px}.hero p{margin:4px 0 0;color:var(--mut)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.chip{padding:6px 12px;border:1px solid var(--bd);background:var(--card);border-radius:999px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.chip.on{background:var(--bl);color:#fff;border-color:var(--bl)}.chip{padding:6px 12px;border:1px solid var(--bd);background:var(--card);border-radius:999px;font-size:14px}
 .grp{margin:20px 0 6px;font-weight:600;color:var(--mut);font-size:14px}
 .row{display:flex;align-items:center;gap:14px;padding:14px;border-bottom:1px solid var(--bd)}.row:first-of-type{border-top:1px solid var(--bd)}
 .row b{display:block;font-size:17px}.row span.d{color:var(--mut);font-size:14px}.ic{font-size:26px;width:36px;text-align:center}.row>div{flex:1}
@@ -68,25 +68,36 @@ function voice(){if(!sp)return;V=speechSynthesis.getVoices().find(v=>v.lang.repl
 if(sp)speechSynthesis.onvoiceschanged=voice;
 function say(t){if(!sp)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='cs-CZ';if(V)u.voice=V;u.rate=.8;speechSynthesis.speak(u)}
 const row=(h,i,t,d)=>`<a class='row' href='#/${h}'><span class='ic'>${i}</span><div><b>${t}</b><span class='d'>${d}</span></div></a>`;
-function home(){return `<div class='hero'><img src='icon-192.png' alt=''><div><h1>Prague</h1><p>Le tchèque du quotidien et les clés de la ville.</p></div></div><div class='grp'>Parler</div>`+row('mots','📖','Mots',`${W.length} mots et phrases avec audio`)+row('prono','🔊','Prononciation','Les repères pour bien se faire comprendre')+row('quiz','🎯','Quiz',`Teste-toi, à l'oreille ou à l'écrit`)+`<div class='grp'>Visiter</div>`+row('histoire','🏰','Histoire','Huit étapes, de Bořivoj à 1989')+row('lieux','📍','Lieux','Six sites à ne pas manquer')+`<div class='grp'>Préparer</div>`+row('gastro','🍺','Gastronomie','Plats, bière et bons réflexes à table')+row('infos','ℹ️','Infos pratiques','Argent, transports, papiers, sécurité')}
+function home(){return `<div class='hero'><img src='icon-192.png' alt=''><div><h1>Prague</h1><p>Le tchèque du quotidien et les clés de la ville.</p></div></div><div class='grp'>Parler</div>`+row('seance','🔥','Séance du jour',sd())+row('mots','📖','Mots',`${W.length} mots et phrases avec audio`)+row('prono','🔊','Prononciation','Les repères pour bien se faire comprendre')+row('quiz','🎯','Quiz',`Teste-toi, à l'oreille ou à l'écrit`)+`<div class='grp'>Visiter</div>`+row('histoire','🏰','Histoire','Huit étapes, de Bořivoj à 1989')+row('lieux','📍','Lieux','Six sites à ne pas manquer')+`<div class='grp'>Préparer</div>`+row('gastro','🍺','Gastronomie','Plats, bière et bons réflexes à table')+row('infos','ℹ️','Infos pratiques','Argent, transports, papiers, sécurité')}
 function mots(){const K=[...new Set(W.map(x=>x[0]))];let h='<h3>Mots</h3><div class="chips">'+K.map((k,j)=>`<button class="chip" data-g="${j}">${k}</button>`).join('')+'</div>',c='';W.forEach(([g,cz,fr,ph],i)=>{if(g!=c){c=g;h+=`<h2 id='g${K.indexOf(g)}'>${g}</h2>`}h+=`<div class='card w'><div><div class='cz'>${cz}</div><div class='ph'>${ph}</div><div class='fr'>${fr}</div></div><button class='play' data-s='${i}' aria-label='Écouter'>▶</button></div>`});return h}
 function prono(){return `<h3>Prononciation</h3>`+T.map(([a,b,s])=>`<div class='card w' style='margin-top:8px'><div><div class='cz'>${a}</div><div class='fr'>${b}</div></div><button class='play' data-say='${s}' aria-label='Écouter'>▶</button></div>`).join('')}
 function histoire(){return `<h3>Histoire en 8 étapes</h3><div class='tl' style='margin-top:18px'>`+H.map(([d,t,x,w])=>`<div class='it'><div class='date'>${d}</div><b>${t}</b><div>${x}</div><div class='where'>À voir : ${w}</div></div>`).join('')+`</div>`}
 function lieux(){return `<h3>Lieux à ne pas manquer</h3>`+P.map(([n,c,x,t])=>`<div class='card' style='margin-top:8px'><div class='w'><div><b>${n}</b><div class='ph'>${c}</div></div><button class='play' data-say='${c}' aria-label='Écouter'>▶</button></div><div>${x}</div><div class='tip'>${t}</div></div>`).join('')}
-function quiz(){if(!Q)return `<h3>Quiz</h3><h2>10 questions au choix</h2>`+[['cz','Tchèque → français'],['ear','Écoute → français'],['fr','Français → tchèque']].map(([m,t])=>`<button class='btn opt' data-m='${m}'>${t}</button>`).join('');
-if(Q.i>=Q.l.length)return `<div class='card'><div class='big'>${Q.s} / ${Q.l.length}</div><p style='text-align:center'>${Q.s>=8?'Super !':Q.s>=5?'Bien, encore un petit effort !':'Courage, retente !'}</p></div><button class='btn pri opt' data-m='${Q.m}'>Rejouer</button><button class='btn opt' data-m=''>Changer de quiz</button>`;
-const c=Q.l[Q.i];if(!Q.o)Q.o=sh([c,...sh(W.filter(x=>x!=c)).slice(0,3)]);const L=x=>Q.m=='fr'?x[1]:x[2];const p=Q.m=='cz'?c[1]:Q.m=='ear'?'Écoute…':c[2];
-return `<p class='ph'>Question ${Q.i+1}/${Q.l.length}</p><div class='card'><div class='big'>${p}</div>`+(Q.m!='fr'?`<div style='text-align:center'><button class='play' data-q='1' aria-label='Écouter'>▶</button></div>`:'')+`</div>`+Q.o.map((x,j)=>`<button class='btn opt${Q.a!=null?(x==c?' ok':j==Q.a?' ko':''):''}' data-a='${j}'>${L(x)}</button>`).join('')+(Q.a!=null?`<p class='ph'>${c[1]} · ${c[3]}</p><button class='btn pri opt' data-n='1'>Suivant</button>`:'')}
+const CATS=[...new Set(W.map(x=>x[0]))];let QC='';
+const LS={get(){try{return JSON.parse(localStorage.getItem('ahoj.p'))||{}}catch(e){return{}}},set(o){try{localStorage.setItem('ahoj.p',JSON.stringify(o))}catch(e){}}};
+const day=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5),INT=[0,1,2,4,8,16];
+function upd(k,ok){const p=LS.get(),t=day(),e=p[k]||{b:0,d:t};e.b=ok?Math.min(5,e.b+1):0;e.d=t+(ok?INT[e.b]:0);p[k]=e;LS.set(p)}
+function streak(){let s;try{s=JSON.parse(localStorage.getItem('ahoj.s'))||{}}catch(e){s={}}const t=day();if(s.last!=t){s.n=s.last==t-1?(s.n||0)+1:1;s.last=t;try{localStorage.setItem('ahoj.s',JSON.stringify(s))}catch(e){}}}
+function getStreak(){try{const s=JSON.parse(localStorage.getItem('ahoj.s'));return s&&(s.last==day()||s.last==day()-1)?s.n:0}catch(e){return 0}}
+function sd(){const p=LS.get(),t=day();let due=0,mast=0,n=0;W.forEach(w=>{const e=p[w[1]];if(e){n++;if(e.d<=t)due++;if(e.b>=4)mast++}});const k=getStreak();return n==0?'5 minutes pour démarrer : mots nouveaux et révisions':(k?k+' jour'+(k>1?'s':'')+' de suite · ':'')+due+' à réviser · '+mast+' maîtrisés'}
+function startS(){const p=LS.get(),t=day();const due=W.filter(w=>p[w[1]]&&p[w[1]].d<=t).sort((a,b)=>p[a[1]].b-p[b[1]].b).slice(0,10);const nw=sh(W.filter(w=>!p[w[1]])).slice(0,Math.min(5,10-due.length));let l=[...due,...nw];if(!l.length)l=[...W].sort((a,b)=>p[a[1]].b-p[b[1]].b).slice(0,10);l=sh(l);return{seance:1,l,nw:l.map(w=>!p[w[1]]),ms:l.map(w=>{const b=p[w[1]]?p[w[1]].b:0;return b<2?'cz':b<4?'ear':'fr'}),i:0,s:0,a:null,o:null}}
+const mkQ=m=>({m,l:sh(QC?W.filter(w=>w[0]==QC):W).slice(0,10),i:0,s:0,a:null,o:null}),M=()=>Q.ms?Q.ms[Q.i]:Q.m;
+function quiz(){if(!Q)return `<h3>Quiz</h3><h2>Thème</h2><div class='chips'>`+['',...CATS].map(k=>`<button class='chip${QC==k?' on':''}' data-c='${k}'>${k||'Tous'}</button>`).join('')+`</div><h2>Type de quiz (10 questions)</h2>`+[['cz','Tchèque → français'],['ear','Écoute → français'],['fr','Français → tchèque']].map(([m,t])=>`<button class='btn opt' data-m='${m}'>${t}</button>`).join('');
+if(Q.i>=Q.l.length)return `<div class='card'><div class='big'>${Q.s} / ${Q.l.length}</div><p style='text-align:center'>${Q.seance?'Séance terminée. Les mots ratés reviendront bientôt.':Q.s>=8?'Super !':Q.s>=5?'Bien, encore un petit effort !':'Courage, retente !'}</p></div>`+(Q.seance?`<a class='btn pri opt' style='display:block;text-align:center' href='#/'>Retour à l'accueil</a>`:`<button class='btn pri opt' data-m='${Q.m}'>Rejouer</button><button class='btn opt' data-m=''>Changer de quiz</button>`);
+const c=Q.l[Q.i],m=M();if(!Q.o)Q.o=sh([c,...sh(W.filter(x=>x!=c)).slice(0,3)]);const L=x=>m=='fr'?x[1]:x[2];const p=m=='cz'?c[1]:m=='ear'?'Écoute…':c[2];
+return (Q.seance?`<h3>Séance du jour</h3>`:'')+`<p class='ph'>Question ${Q.i+1}/${Q.l.length}${Q.nw&&Q.nw[Q.i]?` · <span class='date'>Nouveau mot</span>`:''}</p><div class='card'><div class='big'>${p}</div>`+(m!='fr'?`<div style='text-align:center'><button class='play' data-q='1' aria-label='Écouter'>▶</button></div>`:'')+`</div>`+Q.o.map((x,j)=>`<button class='btn opt${Q.a!=null?(x==c?' ok':j==Q.a?' ko':''):''}' data-a='${j}'>${L(x)}</button>`).join('')+(Q.a!=null?`<p class='ph'>${c[1]} · ${c[3]}</p><button class='btn pri opt' data-n='1'>Suivant</button>`:'')}
 function gastro(){return `<h3>Gastronomie</h3>`+G.map(([c,t,x])=>`<div class='card' style='margin-top:8px'><div class='w'><div><b>${c}</b><div class='ph'>${t}</div></div><button class='play' data-say='${c}' aria-label='Écouter'>▶</button></div><div>${x}</div></div>`).join('')+`<div class='card'><b>Bon plan</b><div class='tip'>Le menu du midi (polední menu) est souvent moins cher que la carte du soir. Demande l'addition avec « Účet, prosím ».</div></div>`}
 function infos(){return `<h3>Infos pratiques</h3>`+I.map(([t,x])=>`<div class='card' style='margin-top:8px'><b>${t}</b><div>${x}</div></div>`).join('')}
-const S={mots,prono,quiz,histoire,lieux,gastro,infos};
-function render(){const k=location.hash.replace('#/','');app.innerHTML=(S[k]?`<a class='back' href='#/'>← Accueil</a><p id='v' class='ph'></p>`+S[k]():home());voice();window.scrollTo(0,0)}
+const S={mots,prono,quiz,histoire,lieux,gastro,infos,seance:quiz};
+function render(){const k=location.hash.replace('#/','');if(k=='seance'&&!Q)Q=startS();app.innerHTML=(S[k]?`<a class='back' href='#/'>← Accueil</a><p id='v' class='ph'></p>`+S[k]():home());voice();window.scrollTo(0,0)}
 addEventListener('hashchange',()=>{Q=null;if(sp)speechSynthesis.cancel();render()});
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-if(d.g!=null){document.getElementById('g'+d.g).scrollIntoView({behavior:'smooth'});return}if(d.say)return say(d.say);if(d.s!=null)return say(W[d.s][1]);if(d.q)return say(Q.l[Q.i][1]);
-if(d.m!=null){Q=d.m?{m:d.m,l:sh(W).slice(0,10),i:0,s:0,a:null,o:null}:null;if(Q&&Q.m=='ear')say(Q.l[0][1])}
-else if(d.a!=null&&Q.a==null){Q.a=+d.a;if(Q.o[Q.a]==Q.l[Q.i])Q.s++}
-else if(d.n){Q.i++;Q.a=null;Q.o=null;if(Q.m=='ear'&&Q.l[Q.i])say(Q.l[Q.i][1])}
+if(d.g!=null){document.getElementById('g'+d.g).scrollIntoView({behavior:'smooth'});return}
+if(d.say)return say(d.say);if(d.s!=null)return say(W[d.s][1]);if(d.q)return say(Q.l[Q.i][1]);
+if(d.c!=null){QC=d.c}
+else if(d.m!=null){Q=d.m?mkQ(d.m):null;if(Q&&Q.m=='ear')say(Q.l[0][1])}
+else if(d.a!=null&&Q.a==null){Q.a=+d.a;const ok=Q.o[Q.a]==Q.l[Q.i];if(ok)Q.s++;if(Q.seance)upd(Q.l[Q.i][1],ok)}
+else if(d.n){Q.i++;Q.a=null;Q.o=null;if(Q.seance&&Q.i>=Q.l.length)streak();if(Q.l[Q.i]&&M()=='ear')say(Q.l[Q.i][1])}
 else return;
 const y=scrollY;render();scrollTo(0,y)});
 render();if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
